@@ -1,0 +1,19 @@
+{
+  "name": "sentinelx",
+  "version": "1.0.0",
+  "description": "Secure incident reporting platform with E2EE and GPU-accelerated redaction on Akash Network",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:api": "cd gateway-api && npm run dev",
+    "dev:worker": "cd gpu-worker && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8001",
+    "build": "cd frontend && npm run build",
+    "install:all": "cd frontend && npm install && cd ../gateway-api && npm install && cd ../ethereum && npm install",
+    "deploy": "akash tx deployment create akash-deploy.yml --from wallet --chain-id akashnet-2"
+  },
+  "keywords": ["incident-reporting", "e2ee", "gpu", "akash", "ethereum", "privacy"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rahul-Raval-2912/SentinelX.git"
+  }
+}
