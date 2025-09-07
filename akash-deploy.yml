@@ -247,24 +247,30 @@ services:
         npm install express
         node server.js
 
+# ENTERPRISE SCALING AVAILABLE
+# See /enterprise/ folder for:
+# - multi-tenant-architecture.yml (Fortune 500 deployment)
+# - government-deployment.yml (FedRAMP compliant)
+# - mobile-app-architecture.yml (React Native/Flutter)
+
 profiles:
   compute:
     web:
       resources:
         cpu:
-          units: 0.5
+          units: 2  # Scaled for enterprise load
         memory:
-          size: 512Mi
+          size: 2Gi  # Increased for better performance
         storage:
-          size: 1Gi
+          size: 5Gi  # More storage for enterprise features
     api:
       resources:
         cpu:
-          units: 1
+          units: 4  # Multi-core for concurrent processing
         memory:
-          size: 1Gi
+          size: 8Gi  # High memory for AI/ML workloads
         storage:
-          size: 2Gi
+          size: 20Gi  # Enterprise data storage
 
   placement:
     akash:
@@ -276,10 +282,10 @@ profiles:
       pricing:
         web:
           denom: uakt
-          amount: 50
+          amount: 200  # Enterprise pricing
         api:
           denom: uakt
-          amount: 100
+          amount: 400  # High-performance API pricing
 
 deployment:
   web:
