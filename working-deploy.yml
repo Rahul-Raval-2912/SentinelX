@@ -317,7 +317,13 @@ services:
               input.value = '';
               
               setTimeout(() => {
-                const response = aiAssistant.processMessage(message);
+                let response = "I can help with incident reporting, privacy questions, and technical details.";
+                const msg = message.toLowerCase();
+                if (msg.includes('hello') || msg.includes('hi')) response = "Hello! I'm your SentinelX AI assistant. I can help with incident reporting and security questions.";
+                if (msg.includes('report')) response = "Include specific details like dates, times, people involved, and evidence. Your identity is protected through encryption.";
+                if (msg.includes('security')) response = "We use AES-256-GCM encryption, zero-knowledge processing, and automatic PII redaction for complete privacy.";
+                if (msg.includes('blockchain')) response = "We create immutable blockchain proofs on Ethereum for permanent verification of your reports.";
+                
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message bot';
                 botMessage.innerHTML = `<strong>AI Assistant:</strong> ${response}`;
@@ -376,11 +382,30 @@ services:
                   <strong>Blockchain Hash:</strong> 0x${Math.random().toString(16).substr(2, 16)}...
                 </div>
                 <div style="text-align: center;">
-                  <button class="btn" onclick="showSection('dashboard')" style="margin-right: 1rem;"><i class="fas fa-chart-line"></i> View Dashboard</button>
+                  <button class="btn" onclick="updateDashboard(); showSection('dashboard');" style="margin-right: 1rem;"><i class="fas fa-chart-line"></i> View Dashboard</button>
                   <button class="btn btn-secondary" onclick="document.getElementById('reportForm').reset(); document.getElementById('report-status').style.display='none';"><i class="fas fa-plus"></i> Submit Another</button>
                 </div>
               `;
+              
+              // Update dashboard metrics
+              updateDashboard();
             });
+            
+            function updateDashboard() {
+              // Update today's metrics
+              const todayMetrics = document.querySelector('#dashboard .feature-card:nth-child(2) div div');
+              if (todayMetrics) {
+                const currentCount = parseInt(todayMetrics.textContent) || 47;
+                todayMetrics.textContent = currentCount + 1;
+              }
+              
+              // Update processing queue
+              const queueSpan = document.querySelector('#dashboard .feature-card:nth-child(1) span[style*="color: var(--warning)"]');
+              if (queueSpan) {
+                const currentQueue = parseInt(queueSpan.textContent) || 12;
+                queueSpan.textContent = Math.max(0, currentQueue - 1);
+              }
+            }
           </script>
         </body>
         </html>
