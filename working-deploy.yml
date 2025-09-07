@@ -369,6 +369,86 @@ services:
               currentSection = sectionName;
             }
 
+            // Conversation context and AI intelligence
+            let conversationHistory = [];
+            let userContext = { hasReported: false, concernLevel: 'general', topics: [] };
+            
+            function getIntelligentResponse(message) {
+              const msg = message.toLowerCase();
+              conversationHistory.push(message);
+              
+              // Natural language understanding
+              if (msg.includes('what is') && msg.includes('sentinelx')) {
+                return "SentinelX is a secure incident reporting platform that uses AI and blockchain technology to protect your identity while ensuring your report reaches the right people. Think of it as a digital safe space for reporting sensitive matters.";
+              }
+              
+              if (msg.includes('how') && (msg.includes('work') || msg.includes('does it'))) {
+                return "Here's how it works: You submit your report → We encrypt it instantly → AI processes and anonymizes → Blockchain creates proof → Report reaches authorities → You get confirmation. All in under 5 seconds, with complete privacy.";
+              }
+              
+              if (msg.includes('safe') || msg.includes('secure') || msg.includes('anonymous')) {
+                return "Your safety is guaranteed through multiple layers: military-grade encryption on your device, AI that removes all identifying information, blockchain verification, and zero-knowledge processing. Even we can't see your original data.";
+              }
+              
+              if (msg.includes('worried') || msg.includes('concerned') || msg.includes('afraid')) {
+                return "I understand your concerns - that's completely normal. Your safety and privacy are our absolute priority. Everything here is designed to protect you completely. What specific aspect worries you most?";
+              }
+              
+              if (msg.includes('report') && (msg.includes('how') || msg.includes('what'))) {
+                return "For effective reporting, include: what happened (be specific), when it occurred, where it took place, who was involved, and any evidence you have. Don't worry about identifying details - our AI automatically removes them to protect you.";
+              }
+              
+              if (msg.includes('blockchain') || msg.includes('proof')) {
+                return "Blockchain creates an unchangeable digital record of your report. It's like having a tamper-proof timestamp that proves your report existed at a specific time - crucial for legal purposes and ensuring accountability.";
+              }
+              
+              if (msg.includes('ai') || msg.includes('artificial intelligence')) {
+                return "Our AI uses advanced machine learning for face detection, text redaction, and privacy protection. It processes everything on secure GPU clusters, automatically removing names, faces, addresses - anything that could identify you.";
+              }
+              
+              if (msg.includes('legal') || msg.includes('court') || msg.includes('evidence')) {
+                return "Your reports can serve as evidence in legal proceedings. We provide blockchain verification and maintain detailed audit trails. The platform is GDPR and CCPA compliant. For specific legal advice, consult with an attorney.";
+              }
+              
+              if (msg.includes('time') || msg.includes('long') || msg.includes('fast')) {
+                return "Processing is incredibly fast - typically under 2 seconds. You can report anytime (we're 24/7), get immediate confirmation, and your report is instantly secured with blockchain proof.";
+              }
+              
+              if (msg.includes('hello') || msg.includes('hi') || msg.match(/^(good morning|good afternoon|good evening)/)) {
+                const greetings = [
+                  "Hello! I'm here to help you navigate incident reporting safely and securely. What's on your mind today?",
+                  "Hi there! I'm your SentinelX assistant. Whether you need to report something or just have questions, I'm here to help.",
+                  "Good to see you! I specialize in helping people understand secure incident reporting. How can I assist you?"
+                ];
+                return greetings[Math.floor(Math.random() * greetings.length)];
+              }
+              
+              if (msg.includes('help') || msg.includes('support')) {
+                return "I'm here to help with anything you need! I can guide you through reporting, explain our security measures, walk you through the process, or answer technical questions. What would be most helpful?";
+              }
+              
+              if (msg.includes('thank') || msg.includes('thanks')) {
+                return "You're very welcome! I'm glad I could help. Feel free to ask if you have any other questions about incident reporting or our platform. Your safety and privacy are what matter most.";
+              }
+              
+              // Contextual follow-ups
+              if (conversationHistory.length > 1) {
+                const recentContext = conversationHistory.slice(-2).join(' ').toLowerCase();
+                if (recentContext.includes('report') && msg.includes('yes')) {
+                  return "Great! You can start by clicking the 'Submit Report' button above. I'll be here if you need any guidance while filling out the form. Remember, everything is completely anonymous and secure.";
+                }
+              }
+              
+              // Default intelligent response
+              const responses = [
+                "That's an interesting question. Could you tell me more about what you'd like to know? I'm here to help with incident reporting, security, or any platform features.",
+                "I want to make sure I give you the most helpful information. Could you be more specific about what you're looking for?",
+                "I'm here to help with any questions about incident reporting, privacy protection, or how our platform works. What would you like to know more about?"
+              ];
+              
+              return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
             function sendMessage() {
               const input = document.getElementById('chat-input');
               const message = input.value.trim();
@@ -381,56 +461,24 @@ services:
               chatMessages.appendChild(userMessage);
               input.value = '';
               
+              // Show thinking indicator
+              const thinkingDiv = document.createElement('div');
+              thinkingDiv.id = 'thinking-indicator';
+              thinkingDiv.className = 'message bot';
+              thinkingDiv.innerHTML = `<strong>AI Assistant:</strong> <span style="opacity: 0.7;">thinking...</span>`;
+              chatMessages.appendChild(thinkingDiv);
+              chatMessages.scrollTop = chatMessages.scrollHeight;
+              
               setTimeout(() => {
-                const msg = message.toLowerCase();
-                let response = "I can help with incident reporting, privacy questions, and technical details. What would you like to know?";
+                thinkingDiv.remove();
                 
-                // Greetings
-                if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) {
-                  response = "Hello! I'm your SentinelX AI assistant. I can help you with incident reporting, security questions, and guide you through our platform. What can I assist you with today?";
-                }
-                
-                // Reporting guidance
-                else if (msg.includes('report') || msg.includes('incident') || msg.includes('submit')) {
-                  response = "For incident reporting, include: <br>• Specific details (what, when, where, who)<br>• Dates and times<br>• People involved or witnesses<br>• Any evidence (photos, documents, messages)<br>• Impact or consequences<br><br>Your identity is completely protected through end-to-end encryption.";
-                }
-                
-                // Security and privacy
-                else if (msg.includes('security') || msg.includes('privacy') || msg.includes('safe') || msg.includes('anonymous')) {
-                  response = "Your security is our top priority:<br>• AES-256-GCM military-grade encryption<br>• Zero-knowledge processing (we can't see your data)<br>• Automatic PII redaction using AI<br>• Face detection and blurring<br>• Complete anonymity guaranteed<br><br>Even our systems cannot identify you.";
-                }
-                
-                // Blockchain and verification
-                else if (msg.includes('blockchain') || msg.includes('proof') || msg.includes('verify')) {
-                  response = "We use blockchain for immutable proof:<br>• Reports stored on Ethereum network<br>• Cryptographic verification<br>• Tamper-proof audit trail<br>• Legal admissibility<br>• Permanent record that cannot be deleted<br><br>This ensures your report has legal standing.";
-                }
-                
-                // AI and technology
-                else if (msg.includes('ai') || msg.includes('gpu') || msg.includes('technology') || msg.includes('how')) {
-                  response = "Our AI technology includes:<br>• GPU-accelerated processing on Akash Network<br>• Face detection and automatic blurring<br>• OCR for text extraction and redaction<br>• NER for PII identification<br>• Sentiment analysis for risk assessment<br>• Processing time: under 2 seconds<br><br>All processing happens on secure, decentralized infrastructure.";
-                }
-                
-                // Process and steps
-                else if (msg.includes('process') || msg.includes('step') || msg.includes('work')) {
-                  response = "The reporting process:<br>1. Fill out the incident form<br>2. Upload any evidence (optional)<br>3. Data encrypted on your device<br>4. AI processes and redacts sensitive info<br>5. Blockchain proof generated<br>6. Report routed to appropriate authorities<br>7. You receive confirmation and tracking ID<br><br>Entire process takes 2-5 seconds.";
-                }
-                
-                // Legal and compliance
-                else if (msg.includes('legal') || msg.includes('law') || msg.includes('court') || msg.includes('evidence')) {
-                  response = "Legal compliance features:<br>• GDPR and CCPA compliant<br>• Blockchain proofs admissible in court<br>• Detailed audit trails<br>• Timestamped submissions<br>• Immutable evidence chain<br><br>Consult with a lawyer for specific legal advice.";
-                }
-                
-                // Help and support
-                else if (msg.includes('help') || msg.includes('support') || msg.includes('problem')) {
-                  response = "I'm here to help! I can assist with:<br>• Incident reporting guidance<br>• Security and privacy questions<br>• Technical explanations<br>• Process walkthrough<br>• Legal considerations<br>• Platform features<br><br>What specific area would you like help with?";
-                }
-                
+                const response = getIntelligentResponse(message);
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message bot';
                 botMessage.innerHTML = `<strong>AI Assistant:</strong> ${response}`;
                 chatMessages.appendChild(botMessage);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-              }, 1000);
+              }, Math.random() * 1500 + 800);
               
               chatMessages.scrollTop = chatMessages.scrollHeight;
             }
