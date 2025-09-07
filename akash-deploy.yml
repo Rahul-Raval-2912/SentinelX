@@ -34,72 +34,31 @@ services:
         EOF
         
         # Create AI Assistant script
-        cat > /usr/share/nginx/html/ai-assistant.js << 'EOF'
-// Advanced AI Assistant with Comprehensive Knowledge Base
+        cat > /usr/share/nginx/html/ai-assistant.js << 'JSEOF'
 class SentinelXAI {
-  constructor() {
-    this.knowledgeBase = {
-      reporting: {
-        workplace: {
-          keywords: ['harassment', 'workplace', 'boss', 'colleague', 'discrimination', 'bullying'],
-          responses: [
-            "For workplace harassment, document specific incidents with dates, times, and witnesses. Your identity will be completely protected through our encryption.",
-            "Workplace incidents should include: What happened, when it occurred, who was involved, any witnesses, and impact on you. All data is encrypted end-to-end."
-          ]
-        },
-        security: {
-          keywords: ['security', 'breach', 'hack', 'data', 'password', 'cyber'],
-          responses: [
-            "For security breaches, include: What systems were affected, when you noticed it, what data might be compromised, and any suspicious activities.",
-            "Security incidents require immediate attention. Document what happened, which systems/accounts were involved, and any unusual activities."
-          ]
-        }
-      },
-      technical: {
-        encryption: {
-          keywords: ['encryption', 'security', 'privacy', 'safe', 'protected'],
-          responses: [
-            "We use military-grade AES-256-GCM encryption. Your data is encrypted on your device before transmission.",
-            "Your privacy is guaranteed through end-to-end encryption, zero-knowledge processing, and automatic PII redaction."
-          ]
-        }
-      }
-    };
-  }
-
+  constructor() {}
   processMessage(message) {
-    const lowerMessage = message.toLowerCase();
-    
-    if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-      return "Hello! I'm your SentinelX AI assistant. I can help you with incident reporting, answer questions about our security, or guide you through any process. What would you like to know?";
+    const msg = message.toLowerCase();
+    if (msg.includes('hello') || msg.includes('hi')) {
+      return "Hello! I'm your SentinelX AI assistant. I can help you with incident reporting and answer security questions.";
     }
-    
-    if (lowerMessage.includes('report') || lowerMessage.includes('incident')) {
-      return "I can guide you through incident reporting. Include specific details like dates, times, people involved, and any evidence. Your identity will be completely protected through encryption.";
+    if (msg.includes('report')) {
+      return "Include specific details like dates, times, people involved, and evidence. Your identity is protected through encryption.";
     }
-    
-    if (lowerMessage.includes('security') || lowerMessage.includes('privacy')) {
-      return "Your privacy is our top priority. We use AES-256-GCM encryption, zero-knowledge processing, and automatic PII redaction. Even we cannot see your original content.";
+    if (msg.includes('security')) {
+      return "We use AES-256-GCM encryption, zero-knowledge processing, and automatic PII redaction for complete privacy.";
     }
-    
-    if (lowerMessage.includes('blockchain')) {
-      return "We create immutable blockchain proofs on Ethereum. This provides permanent verification that your report existed at a specific time and hasn't been tampered with.";
+    if (msg.includes('blockchain')) {
+      return "We create immutable blockchain proofs on Ethereum for permanent verification of your reports.";
     }
-    
-    if (lowerMessage.includes('ai') || lowerMessage.includes('gpu')) {
-      return "Our AI uses advanced machine learning for face detection, OCR text extraction, and PII removal. All processing happens on secure GPU clusters in under 2 seconds.";
-    }
-    
-    return "I can help you with incident reporting, privacy questions, technical details, or any concerns about the process. What would you like to know?";
+    return "I can help with incident reporting, privacy questions, and technical details. What would you like to know?";
   }
-  
-  getSuggestions(message) {
+  getSuggestions() {
     return ["How do I report an incident?", "Is this platform secure?", "What happens to my data?"];
   }
 }
-
 window.SentinelXAI = SentinelXAI;
-EOF
+JSEOF
         
         # Create main HTML file
         cat > /usr/share/nginx/html/index.html << 'EOF'
