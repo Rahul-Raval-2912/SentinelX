@@ -282,17 +282,17 @@ profiles:
       pricing:
         web:
           denom: uakt
-          amount: 200  # Enterprise pricing
+          amount: 200
         api:
           denom: uakt
-          amount: 400  # High-performance API pricing
+          amount: 400
 
 deployment:
   web:
     akash:
-      profile: compute
+      profile: web
       count: 1
   api:
     akash:
-      profile: compute
+      profile: api
       count: 1
